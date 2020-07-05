@@ -5,12 +5,12 @@ function populateOptions() {
         // console.log(data)
 
         var dropdownOptions= data.names
-        var selDataset = d3.select("#selDataset")
+        var nameSelection = d3.select("#selDataset")
             
         // console.log(dropdownOptions)
         
         dropdownOptions.forEach(function (option) {
-            selDataset.append("option")
+            nameSelection.append("option")
             .text(option)
             .attr("value", function() {
             return option;
@@ -24,17 +24,19 @@ function populateOptions() {
 
 populateOptions()
 
+d3.selectAll("#selDataset").on("change", initiate);
 
-d3.selectAll("#selDataset").on("change", buildPlots);
+barChart(940);
+sampleMetadata(940);
 
-
-function buildPlots() {
+function initiate() {
 
     var selectedID = d3.select("#selDataset").node().value;
     console.log(selectedID)
     barChart(selectedID);
+    sampleMetadata(selectedID);
+    // bubbleChart(selectedID);
 
-};
 
 function barChart(selectedID) {
 
@@ -43,7 +45,7 @@ function barChart(selectedID) {
         var selectedData = data.samples.filter( el => el.id === selectedID)
 
         var IDs = selectedData.map(el => el.otu_ids)
-        
+        // NO LO LEE
         IDs = IDs[0].slice(0,10)
 
         let otu_ids = [];
@@ -60,10 +62,9 @@ function barChart(selectedID) {
 
         otu_labels = otu_labels[0].slice(0,10)
 
-        console.log(otu_labels)
-        console.log(sample_values)
-        console.log(otu_ids)
-
+        // console.log(otu_labels)
+        // console.log(sample_values)
+        // console.log(otu_ids)
 
         var trace1={
             type: "bar",
@@ -85,5 +86,41 @@ function barChart(selectedID) {
             Plotly.newPlot("bar", plotData, layout);    
     })
     
+}
+
+function sampleMetadata(selectedID){
+    d3.json("data/samples.json").then(function(data){
+
+        var selectedData = data.metadata.filter( el => el.id == selectedID)
+
+        var id = selectedData[0].id
+        var ethnicity = selectedData[0].ethnicity
+        var gender = selectedData[0].gender
+        var age = selectedData[0].age
+        var location = selectedData[0].location
+        var bbtype = selectedData[0].bbtype
+        var wfreq = selectedData[0].wfreq
+
+        var panel = d3.select("#sample-metadata")
+
+        panel.html("")
+        // COMO PONERLE NEGRITAS???
+        panel.append("p").text(`id: ${id}`)
+        panel.append("p").text(`Ethnicity: ${ethnicity}`)
+        panel.append("p").text(`Gender: ${gender}`)
+        panel.append("p").text(`Age: ${age}`);
+        panel.append("p").text(`Location: ${location}`);
+        panel.append("p").text(`BB Type: ${bbtype}`);
+        panel.append("p").text(`W Frequency: ${wfreq}`);
+    })
+}
+
+function bubbleChart(params) {
+    d3.json("data/samples.json").then(function(data){
+
+        var selectedData = data.metadata.filter( el => el.id == selectedID)
+
+      
+    })
 }
 
