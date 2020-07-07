@@ -50,7 +50,7 @@ function initiate() {
     sampleMetadata(selectedID)
     bubbleChart(selectedID)
 }
-
+// NO LEE EL SLICE
 function barChart(selectedID) {
 
     d3.json("data/samples.json").then(function(data){
