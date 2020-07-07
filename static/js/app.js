@@ -1,5 +1,5 @@
 function populateOptions() {
-    // d3.event.preventDefault();
+    // d3.event.preventDefault()
     d3.json("data/samples.json").then(function(data){
 
         // console.log(data)
@@ -8,35 +8,48 @@ function populateOptions() {
         var nameSelection = d3.select("#selDataset")
             
         // console.log(dropdownOptions)
-        
+    
         dropdownOptions.forEach(function (option) {
             nameSelection.append("option")
             .text(option)
             .attr("value", function() {
-            return option;
-            });
-        });
+            return option
+            })
+        })    
+    })
+}
 
-            
+function randomID(){
+    d3.json("data/samples.json").then(function(data){
+
+        var dropdownOptions= data.names
+
+        var randomElement = dropdownOptions[Math.floor(Math.random() * dropdownOptions.length)]
+    
+        console.log(randomElement)
     })
 
 }
 
+// randomID()
+
 populateOptions()
 
-d3.selectAll("#selDataset").on("change", initiate);
+// Error en el HTML
+barChart(940)
+sampleMetadata(940)
+bubbleChart(940)
 
-barChart(940);
-sampleMetadata(940);
+d3.selectAll("#selDataset").on("change", initiate)
 
 function initiate() {
 
-    var selectedID = d3.select("#selDataset").node().value;
-    console.log(selectedID)
-    barChart(selectedID);
-    sampleMetadata(selectedID);
-    // bubbleChart(selectedID);
-
+    var selectedID = d3.select("#selDataset").node().value
+    // console.log(selectedID)
+    barChart(selectedID)
+    sampleMetadata(selectedID)
+    bubbleChart(selectedID)
+}
 
 function barChart(selectedID) {
 
@@ -45,10 +58,11 @@ function barChart(selectedID) {
         var selectedData = data.samples.filter( el => el.id === selectedID)
 
         var IDs = selectedData.map(el => el.otu_ids)
+        
         // NO LO LEE
         IDs = IDs[0].slice(0,10)
 
-        let otu_ids = [];
+        let otu_ids = []
 
         IDs.forEach(function(name){
             otu_ids.push(`OTU ${name}`)
@@ -79,11 +93,11 @@ function barChart(selectedID) {
             yaxis: {
             autorange: "reversed"
             }
-        };
+        }
         
-            var plotData = [trace1];
+            var plotData = [trace1]
 
-            Plotly.newPlot("bar", plotData, layout);    
+            Plotly.newPlot("bar", plotData, layout)    
     })
     
 }
@@ -104,21 +118,65 @@ function sampleMetadata(selectedID){
         var panel = d3.select("#sample-metadata")
 
         panel.html("")
-        // COMO PONERLE NEGRITAS???
-        panel.append("p").text(`id: ${id}`)
+        // COMO PONERLE NEGRITAS
+        panel.append("p").text(`ID: ${id}`)
         panel.append("p").text(`Ethnicity: ${ethnicity}`)
         panel.append("p").text(`Gender: ${gender}`)
-        panel.append("p").text(`Age: ${age}`);
-        panel.append("p").text(`Location: ${location}`);
-        panel.append("p").text(`BB Type: ${bbtype}`);
-        panel.append("p").text(`W Frequency: ${wfreq}`);
+        panel.append("p").text(`Age: ${age}`)
+        panel.append("p").text(`Location: ${location}`)
+        panel.append("p").text(`BB Type: ${bbtype}`)
+        panel.append("p").text(`W Frequency: ${wfreq}`)
     })
 }
 
-function bubbleChart(params) {
+
+// NO ES RESPONSIVO
+// PALETA DE COLORES
+function bubbleChart(selectedID) {
     d3.json("data/samples.json").then(function(data){
 
-        var selectedData = data.metadata.filter( el => el.id == selectedID)
+        var selectedData = data.samples.filter( el => el.id == selectedID)
+
+        var otu_ids = selectedData.map(el => el.otu_ids)
+        
+        otu_ids = otu_ids[0]
+
+        var sample_values = selectedData.map(el => el.sample_values)
+
+        sample_values = sample_values[0]
+
+        var otu_labels =  selectedData.map(el => el.otu_labels)
+
+        otu_labels = otu_labels[0]
+        
+        // console.log(otu_ids)
+        // console.log(sample_values)
+        // console.log(otu_labels)
+
+
+        var trace1 = {
+            x: otu_ids,
+            y: sample_values,
+            text: otu_labels,
+            mode: 'markers',
+            marker: {
+              color: otu_ids,
+              size: sample_values
+            }
+          };
+          
+          var data = [trace1];
+          
+          var layout = {
+            showlegend: false,
+            xaxis: {
+                title: {
+                  text: 'OTU ID',
+                },
+              },
+          };
+          
+          Plotly.newPlot('bubble', data, layout);
 
       
     })
