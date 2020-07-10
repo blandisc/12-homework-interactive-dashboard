@@ -22,21 +22,21 @@ bubbleChart(940)
 barChart(940)
 }
 
-function randomID(){
-    d3.json("data/samples.json").then(function(data){
+// function randomID(){
+//     d3.json("data/samples.json").then(function(data){
 
-        var dropdownOptions= data.names
+//         var dropdownOptions= data.names
 
-        var randomElement = dropdownOptions[Math.floor(Math.random() * dropdownOptions.length)]
+//         var randomElement = dropdownOptions[Math.floor(Math.random() * dropdownOptions.length)]
     
-        console.log(randomElement)
-    })
+//         console.log(randomElement)
+//     })
 
-}
+// }
 
-// randomID()
+// // randomID()
 
-// Error en el HTML
+
 d3.selectAll("#selDataset").on("change", change)
 
 function change() {
@@ -47,7 +47,7 @@ function change() {
     sampleMetadata(selectedID)
     bubbleChart(selectedID)
 }
-// NO LEE EL SLICE
+
 function barChart(selectedID) {
 
     d3.json("data/samples.json").then(function(data){
@@ -56,7 +56,7 @@ function barChart(selectedID) {
 
         let IDs = selectedData.map(el => el.otu_ids)
         
-        // NO LO LEE
+
        if (IDs[0]) {console.log("Si")}
 
         IDs = IDs[0].slice(0,10)
@@ -127,7 +127,7 @@ function sampleMetadata(selectedID){
         panel.append("p").text(`W Frequency: ${wfreq}`)
     })
 }
-// NO ES RESPONSIVO
+
 // PALETA DE COLORES
 function bubbleChart(selectedID) {
     d3.json("data/samples.json").then(function(data){
@@ -159,7 +159,8 @@ function bubbleChart(selectedID) {
             mode: 'markers',
             marker: {
               color: otu_ids,
-              size: sample_values
+              size: sample_values,
+              colorscale:"Viridis"
             }
           };
           
