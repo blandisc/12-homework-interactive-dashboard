@@ -117,7 +117,6 @@ function sampleMetadata(selectedID){
         var panel = d3.select("#sample-metadata")
 
         panel.html("")
-        // COMO PONERLE NEGRITAS
         panel.append("p").text(`ID: ${id}`)
         panel.append("p").text(`Ethnicity: ${ethnicity}`)
         panel.append("p").text(`Gender: ${gender}`)
